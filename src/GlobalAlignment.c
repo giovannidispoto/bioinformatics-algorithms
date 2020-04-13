@@ -2,7 +2,9 @@
 #define MATCH +1
 #define MISMATCH -1
 #define INDEL -2
-#define N 10
+#define N 6
+#define F_L 6
+#define S_L 4
 
 int max(int,int,int);
 
@@ -11,43 +13,39 @@ int max(int,int,int);
 */
 int main(){
 	//structure used
-	char[] first_seq = "";
-	char[] second_seq = "";
-	int[N][N] dynamic;
-	int i, j;
-	int computation;
-
-	//score
-	int match = MATCH;
-	int mismatch = MISMATCH;
-	int indel = INDEL;
+	char first_seq[] = "CAAGAC";
+	char second_seq[] = "GAAC";
+	int dynamic[S_L+1][F_L+1];
 
 
+  dynamic[0][0] = 0;
 	//initialization of dynamic matrix
-	for(int i = 0; i < N; i++){
-		dynamic[0][i] = indel;
-		dynamic[i][0] = indel;
+	for(int i = 1; i < F_L+1; i++){
+		dynamic[0][i] = dynamic[0][i-1] + INDEL;
 	}
 
-	for(int i = 1; i < N; i++){ //first sequence
-		for(int j = 1; j < N; j++){ //second sequence
-			if(first_seq[i] == first_seq[j])
+  for(int i = 1; i < S_L+1; i++){
+    	dynamic[i][0] =dynamic[i-1][0] + INDEL;
+  }
+
+	for(int i = 1; i < S_L+1; i++){ //first sequence
+		for(int j = 1; j < F_L+1; j++){ //second sequence
+			if(second_seq[i-1] == first_seq[j-1])
 				dynamic[i][j] = max(dynamic[i - 1][j - 1] + MATCH, dynamic[i-1][j] + INDEL, dynamic[i][j-1]+INDEL);
 			else 
-				dynamic[i][j] = max(dynamic[i - 1][j - 1] + MATCH, dynamic[i-1][j] + INDEL, dynamic[i][j-1]+INDEL);
+				dynamic[i][j] = max(dynamic[i - 1][j - 1] + MISMATCH, dynamic[i-1][j] + INDEL, dynamic[i][j-1]+INDEL);
 
 		}
 	}
 
-	printf("Result: %d", dynamic[N-1][N-1]);
-
+  printf("Aligment lenght of %s and %s is: %d", first_seq, second_seq, dynamic[S_L][F_L]);
 
 }
 
 int max(int a, int b, int c){
 
 	if(a > b){
-		if(b > c){
+		if(a > c){
 			return a;
 		}
 		else 
