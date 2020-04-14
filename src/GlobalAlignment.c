@@ -9,7 +9,7 @@
 int max(int,int,int);
 
 /*
-* Example of Global Alignment using Neddlman-Wunsch algorithm 
+* Example of Global Alignment using Needleman-Wunsch algorithm 
 */
 int main(){
 	//structure used
